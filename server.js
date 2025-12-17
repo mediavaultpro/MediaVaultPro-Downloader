@@ -12,11 +12,22 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.json({ 
         status: 'MediaVault Pro API is running!',
+        version: '1.0.0',
         endpoints: {
+            health: 'GET /health',
             info: 'POST /api/info',
             download: 'GET /api/download',
             audio: 'GET /api/audio'
         }
+    });
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime()
     });
 });
 
@@ -48,7 +59,7 @@ app.post('/api/info', async (req, res) => {
                     ? (parseInt(format.contentLength) / (1024 * 1024)).toFixed(2) + ' MB' 
                     : 'Unknown size'
             }))
-            .slice(0, 5); // Limit to top 5 formats
+            .slice(0, 5);
         
         const videoDetails = {
             success: true,
@@ -92,18 +103,15 @@ app.get('/api/download', async (req, res) => {
             .replace(/[^\w\s]/gi, '')
             .replace(/\s+/g, '_');
         
-        // Set headers for download
         res.header('Content-Disposition', `attachment; filename="${title}.mp4"`);
         res.header('Content-Type', 'video/mp4');
         
-        // Stream options
         const options = itag 
             ? { quality: parseInt(itag) }
             : { quality: 'highest', filter: 'audioandvideo' };
         
         console.log('Streaming with options:', options);
         
-        // Stream the video
         ytdl(url, options)
             .on('error', (err) => {
                 console.error('Stream error:', err);
@@ -147,11 +155,9 @@ app.get('/api/audio', async (req, res) => {
             .replace(/[^\w\s]/gi, '')
             .replace(/\s+/g, '_');
         
-        // Set headers for audio download
         res.header('Content-Disposition', `attachment; filename="${title}.mp3"`);
         res.header('Content-Type', 'audio/mpeg');
         
-        // Stream audio only
         ytdl(url, { 
             quality: 'highestaudio',
             filter: 'audioonly'
@@ -179,18 +185,19 @@ app.get('/api/audio', async (req, res) => {
     }
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.json({ 
-        status: 'healthy',
-        timestamp: new Date().toISOString()
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Unhandled error:', err);
+    res.status(500).json({
+        success: false,
+        error: 'Internal server error',
+        message: err.message
     });
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ MediaVault Pro server running on port ${PORT}`);
     console.log(`🌐 API endpoints ready at http://localhost:${PORT}`);
+    console.log(`📅 Started at: ${new Date().toISOString()}`);
 });
-
-
