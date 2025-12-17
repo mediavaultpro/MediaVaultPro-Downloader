@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaVault Pro - Professional Media Downloader</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loader">
+            <svg width="60" height="60" viewBox="0 0 40 40" class="loader-icon">
+                <circle cx="20" cy="20" r="18" fill="url(#gradient-loader)" />
+                <path d="M15 12 L15 28 L28 20 Z" fill="white" />
+                <defs>
+                    <linearGradient id="gradient-loader" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            <p>Loading MediaVault Pro...</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container nav-container">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 40 40" class="logo-icon">
+                        <circle cx="20" cy="20" r="18" fill="url(#gradient1)" />
+                        <path d="M15 12 L15 28 L28 20 Z" fill="white" />
+                        <defs>
+                            <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="logo-text">MediaVault Pro</span>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#features" class="nav-link">Features</a></li>
+                    <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+                    <li><a href="#faq" class="nav-link">FAQ</a></li>
+                </ul>
+                <div class="api-status" id="apiStatus">
+                    <span class="status-indicator"></span>
+                    <span class="status-text">Checking...</span>
+                </div>
+                <button class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Download Videos & Extract Audio Professionally</h1>
+                <p class="hero-subtitle">High-quality media downloading with multiple format support. Fast, secure, and user-friendly.</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <i class="fas fa-download"></i>
+                        <span>Direct Downloads</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-server"></i>
+                        <span>Own Servers</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-bolt"></i>
+                        <span>Fast Speed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tab Navigation -->
+    <section class="main-content">
+        <div class="container">
+            <div class="tab-container">
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="single">
+                        <i class="fas fa-video"></i>
+                        <span>Single Video</span>
+                    </button>
+                    <button class="tab-btn" data-tab="batch">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Batch Download</span>
+                    </button>
+                    <button class="tab-btn" data-tab="audio">
+                        <i class="fas fa-music"></i>
+                        <span>Audio Extractor</span>
+                    </button>
+                </div>
+
+                <!-- Single Video Tab -->
+                <div class="tab-content active" id="single">
+                    <div class="download-card">
+                        <h2>Download Single Video</h2>
+                        <p class="tab-description">Enter a YouTube video URL to download it in your preferred format and quality.</p>
+                        
+                        <div class="input-group">
+                            <input type="url" 
+                                   id="singleUrl" 
+                                   placeholder="Paste YouTube URL here (e.g., https://youtube.com/watch?v=...)" 
+                                   class="url-input">
+                            <button class="analyze-btn" onclick="analyzeVideo()">
+                                <i class="fas fa-search"></i>
+                                Analyze
+                            </button>
+                        </div>
+
+                        <div id="videoInfo" class="video-info" style="display: none;">
+                            <div class="video-preview">
+                                <img src="" alt="Video thumbnail" id="videoThumbnail">
+                                <div class="video-details">
+                                    <h3 id="videoTitle">Video Title</h3>
+                                    <p id="videoDuration">Duration: 00:00</p>
+                                    <p id="videoAuthor">Author: </p>
+                                    <p id="videoViews">Views: </p>
+                                </div>
+                            </div>
+
+                            <div class="quality-section">
+                                <h4>Available Qualities:</h4>
+                                <div class="quality-options" id="qualityOptions">
+                                    <!-- Quality options will be added dynamically -->
+                                </div>
+                            </div>
+
+                            <button class="download-btn-primary" onclick="downloadVideo()">
+                                <i class="fas fa-download"></i>
+                                Download Video
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Batch Download Tab -->
+                <div class="tab-content" id="batch">
+                    <div class="download-card">
+                        <h2>Batch Video Download</h2>
+                        <p class="tab-description">Download multiple videos at once. Add up to 10 YouTube URLs.</p>
+                        
+                        <div class="batch-input-area">
+                            <textarea id="batchUrls" 
+                                      placeholder="Paste multiple YouTube URLs (one per line)&#10;Example:&#10;https://youtube.com/watch?v=VIDEO_ID_1&#10;https://youtube.com/watch?v=VIDEO_ID_2" 
+                                      rows="6"></textarea>
+                            <div class="batch-controls">
+                                <button class="btn-secondary" onclick="clearBatch()">
+                                    <i class="fas fa-trash"></i>
+                                    Clear All
+                                </button>
+                                <button class="btn-primary" onclick="analyzeBatch()">
+                                    <i class="fas fa-list-check"></i>
+                                    Analyze All
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="batchList" class="batch-list" style="display: none;">
+                            <!-- Batch items will be added here dynamically -->
+                        </div>
+
+                        <div class="batch-settings" style="display: none;" id="batchSettings">
+                            <button class="download-btn-primary" onclick="downloadBatch()">
+                                <i class="fas fa-download"></i>
+                                Download All Videos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audio Extractor Tab -->
+                <div class="tab-content" id="audio">
+                    <div class="download-card">
+                        <h2>Audio Extractor</h2>
+                        <p class="tab-description">Extract audio from YouTube videos in MP3 format.</p>
+                        
+                        <div class="input-group">
+                            <input type="url" 
+                                   id="audioUrlInput" 
+                                   placeholder="Paste YouTube URL to extract audio..." 
+                                   class="url-input">
+                            <button class="analyze-btn" onclick="analyzeAudio()">
+                                <i class="fas fa-waveform-lines"></i>
+                                Analyze
+                            </button>
+                        </div>
+
+                        <div id="audioInfo" class="video-info" style="display: none;">
+                            <div class="video-preview">
+                                <img src="" alt="Video thumbnail" id="audioThumbnail">
+                                <div class="video-details">
+                                    <h3 id="audioTitle">Audio Title</h3>
+                                    <p id="audioDuration">Duration: 00:00</p>
+                                </div>
+                            </div>
+
+                            <div class="audio-settings">
+                                <h4>Audio Settings:</h4>
+                                <div class="settings-grid">
+                                    <div class="setting-item">
+                                        <label>Format:</label>
+                                        <select id="audioFormat" disabled>
+                                            <option value="mp3" selected>MP3 (Most Compatible)</option>
+                                        </select>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label>Quality:</label>
+                                        <select id="audioBitrate">
+                                            <option value="320">320 kbps (Best)</option>
+                                            <option value="256">256 kbps</option>
+                                            <option value="192">192 kbps</option>
+                                            <option value="128" selected>128 kbps (Standard)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="download-btn-primary" onclick="extractAudio()">
+                                <i class="fas fa-music"></i>
+                                Extract & Download Audio
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Modal -->
+            <div id="progressModal" class="modal">
+                <div class="modal-content">
+                    <div class="progress-container">
+                        <div class="progress-circle">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring-circle" cx="60" cy="60" r="50"/>
+                            </svg>
+                            <span class="progress-text">0%</span>
+                        </div>
+                        <p class="progress-status">Processing...</p>
+                        <p class="progress-message"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How to Download Videos</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <i class="fas fa-link step-icon"></i>
+                    <h3>Copy URL</h3>
+                    <p>Copy the YouTube video URL from your browser</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <i class="fas fa-paste step-icon"></i>
+                    <h3>Paste Link</h3>
+                    <p>Paste the URL in the input field and click analyze</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <i class="fas fa-cog step-icon"></i>
+                    <h3>Select Quality</h3>
+                    <p>Choose your preferred quality from available options</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <i class="fas fa-download step-icon"></i>
+                    <h3>Download</h3>
+                    <p>Click download and the file will be saved to your device</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose MediaVault Pro?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-server feature-icon"></i>
+                    <h3>Own Servers</h3>
+                    <p>Direct downloads from our servers, no third-party redirects</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bolt feature-icon"></i>
+                    <h3>Lightning Fast</h3>
+                    <p>Optimized servers ensure the fastest download speeds possible</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <h3>Secure & Private</h3>
+                    <p>Your downloads are private and we never store your data</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt feature-icon"></i>
+                    <h3>All Devices</h3>
+                    <p>Works perfectly on phones, tablets, computers, and smart TVs</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-headphones feature-icon"></i>
+                    <h3>Audio Extraction</h3>
+                    <p>Extract high-quality MP3 audio from any YouTube video</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-list feature-icon"></i>
+                    <h3>Batch Processing</h3>
+                    <p>Download multiple videos simultaneously to save time</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Is MediaVault Pro free to use?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, MediaVault Pro is completely free to use. Downloads are processed through our own servers.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        What video formats are supported?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We support MP4 video format and MP3 for audio extraction, ensuring maximum compatibility.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        Is there a download limit?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No daily limits on downloads. You can download as many videos as you need.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        How fast are the downloads?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Download speed depends on your internet connection and the video size. Our servers are optimized for fast downloads.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <svg width="30" height="30" viewBox="0 0 40 40" class="footer-logo-icon">
+                            <circle cx="20" cy="20" r="18" fill="url(#gradient2)" />
+                            <path d="M15 12 L15 28 L28 20 Z" fill="white" />
+                            <defs>
+                                <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span>MediaVault Pro</span>
+                    </div>
+                    <p>Your trusted partner for media downloads</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MediaVault Pro. All rights reserved. | Use responsibly and respect copyrights.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
